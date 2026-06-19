@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warner UGC — Sound Board</title>
+<style>
+  :root { --bg:#0c0d10; --card:#16181d; --card2:#1d2027; --line:#2a2e37;
+           --txt:#e8eaed; --dim:#9aa0ab; --gold:#e8b84b; --hot:#ff5d73; --warn:#ffb020; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+          font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  header { padding:20px 18px 12px; }
+  h1 { margin:0; font-size:21px; } h1 b { color:var(--gold); }
+  .sub { color:var(--dim); font-size:12.5px; margin-top:3px; }
+  .picker { position:sticky; top:0; z-index:6; padding:12px 16px;
+             background:rgba(12,13,16,.94); backdrop-filter:blur(8px);
+             border-bottom:1px solid var(--line); }
+  .picker-label { font-size:12px; color:var(--dim); display:block; margin-bottom:7px; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip { font-size:13px; padding:7px 13px; border:1px solid var(--line);
+           border-radius:999px; color:var(--dim); background:var(--card); cursor:pointer; }
+  .chip:hover { color:var(--txt); }
+  .chip.active { color:#0c0d10; background:var(--gold); border-color:var(--gold); font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:10px 14px 80px; }
+  .pgroup { margin-top:22px; }
+  .poster { font-size:15px; margin:0 0 10px; display:flex; align-items:center; gap:9px; }
+  .pcount { font-size:11px; color:var(--dim); border:1px solid var(--line);
+             padding:1px 8px; border-radius:999px; font-weight:400; }
+  .acct { background:var(--card); border:1px solid var(--line); border-radius:14px;
+           margin-bottom:14px; overflow:hidden; }
+  .acct-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+                padding:12px 16px; border-bottom:1px solid var(--line); }
+  .handle { font-weight:700; color:var(--gold); }
+  .style { font-size:11px; text-transform:uppercase; letter-spacing:.5px;
+            border:1px solid var(--line); border-radius:6px; padding:2px 8px; color:var(--dim); }
+  .style.warn { color:var(--warn); border-color:var(--warn); }
+  .run { font-size:12.5px; color:var(--dim); }
+  .total { margin-left:auto; font-size:13px; color:var(--txt); font-weight:600; }
+  .sounds { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+             gap:10px; padding:14px 16px; }
+  .sound { background:var(--card2); border:1px solid var(--line); border-radius:10px;
+            padding:11px 12px; }
+  .sound.is-prio { border-color:var(--hot); }
+  .s-top { display:flex; align-items:center; gap:7px; }
+  .s-title { font-weight:600; }
+  .prio { font-size:12px; }
+  .s-artist { font-size:12px; color:var(--dim); margin:2px 0 9px; }
+  .s-quota { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .track { display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .track input { width:20px; height:20px; accent-color:var(--gold); cursor:pointer; }
+  .track .count { font-size:12px; color:var(--dim); font-variant-numeric:tabular-nums; }
+  .open { margin-left:auto; font-size:12.5px; color:var(--gold);
+           border:1px solid var(--line); border-radius:7px; padding:3px 10px; }
+  .sound.done { opacity:.45; } .sound.done .s-title { text-decoration:line-through; }
+  .misfit-note { padding:12px 16px; font-size:13px; color:var(--warn); }
+  .misfit .acct-head { border-bottom:none; }
+  .empty { color:var(--dim); text-align:center; padding:40px; }
+  footer { text-align:center; color:var(--dim); font-size:12px; padding:30px 18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎧 Warner UGC — <b>Sound Board</b></h1>
+  <div class="sub"><span id="weekof">This week</span> · 21 posts/page minimum
+    (push to 30+ for the view bonus) · 🔥 priority sounds get the most ·
+    tick each post as you go (saves on this device, resets weekly)</div>
+</header>
+<div class="picker">
+  <span class="picker-label">Who's posting? — tap your name to see only your pages</span>
+  <div class="chips" id="chips"></div>
+</div>
+<main id="board">
+    <div class="pgroup" data-poster="Gigi Lastname">
+      <h2 class="poster">Gigi Lastname <span class="pcount">1 page</span></h2>
+      
+      <section class="acct misfit">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@faded.receipts" target="_blank" rel="noopener">@faded.receipts</a>
+          <span class="style warn">⚠️ needs mapping</span>
+          <span class="run">run by Gigi Lastname</span>
+        </div>
+        <div class="misfit-note">Couldn't match style <b>“Carousel Vids”</b> to a tracker section —
+          fix this page's REFRENCES in Master Pages, or add an alias in config.json.</div>
+      </section>
+    </div>
+    <div class="pgroup" data-poster="Jake Balik">
+      <h2 class="poster">Jake Balik <span class="pcount">5 pages</span></h2>
+      
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@CodyJames6.7" target="_blank" rel="noopener">@CodyJames6.7</a>
+          <span class="style">Truck Tok</span>
+          <span class="run">run by Jake Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:tiktok-sound" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZP9jb4FkM95gY-ugaLQ/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Barely Gettinby</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7645471573454161936" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Barely-GettinBy-7645471573454161936" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Bet On That</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7629196039954909200" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Bet-On-That-7629196039954909200" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Boots By The Wrong Bed</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7650787579864680464" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Boots-By-The-Wrong-Bed-7650787579864680464?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7466103623584582446" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7466103623584582446" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">With Or Without Me</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7444095335000164368" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/With-or-Without-Me-7444095335000164368" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Contagious</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7605135910741821456" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7605135910741821456" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Contagious</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7600573417545664513" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7600573417545664513" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Warren Zeiders</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7637320848614099725" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7637320848614099725?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Highway Home</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7621701355119348510" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7621701355119348510?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">LMWYL (Audio HERE) - $500</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7589791757534038814" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7589791757534038814" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Hill I%27Ll Die On</span></div>
+          <div class="s-artist">Hill I&#x27;ll Die On (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7529820356963911696" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Hill-I%27ll-Die-On-7529820356963911696" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Painted You Pretty</span></div>
+          <div class="s-artist">Painted You Pretty (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7529820538324289537" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Painted-You-Pretty-7529820538324289537" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Funny Seeing You Here</span></div>
+          <div class="s-artist">Funny Seeing You Here - extra</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7506646713580472336" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Funny-Seeing-You-Here-7506646713580472336" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Wannabe</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7633716911797618689" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Wannabe-7633716911797618689" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7631241163416079117" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7631241163416079117" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7642884462732773393" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642884462732773393" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="CodyJames6.7:7642881399624321025" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642881399624321025?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@beaujenkins" target="_blank" rel="noopener">@beaujenkins</a>
+          <span class="style">Truck Tok</span>
+          <span class="run">run by Jake Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:tiktok-sound" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZP9jb4FkM95gY-ugaLQ/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Barely Gettinby</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7645471573454161936" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Barely-GettinBy-7645471573454161936" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Bet On That</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7629196039954909200" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Bet-On-That-7629196039954909200" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Boots By The Wrong Bed</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7650787579864680464" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Boots-By-The-Wrong-Bed-7650787579864680464?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7466103623584582446" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7466103623584582446" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">With Or Without Me</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7444095335000164368" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/With-or-Without-Me-7444095335000164368" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Contagious</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7605135910741821456" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7605135910741821456" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Contagious</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7600573417545664513" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7600573417545664513" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Warren Zeiders</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7637320848614099725" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7637320848614099725?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Highway Home</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7621701355119348510" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7621701355119348510?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">LMWYL (Audio HERE) - $500</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7589791757534038814" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7589791757534038814" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Hill I%27Ll Die On</span></div>
+          <div class="s-artist">Hill I&#x27;ll Die On (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7529820356963911696" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Hill-I%27ll-Die-On-7529820356963911696" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Painted You Pretty</span></div>
+          <div class="s-artist">Painted You Pretty (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7529820538324289537" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Painted-You-Pretty-7529820538324289537" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Funny Seeing You Here</span></div>
+          <div class="s-artist">Funny Seeing You Here - extra</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7506646713580472336" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Funny-Seeing-You-Here-7506646713580472336" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Wannabe</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7633716911797618689" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Wannabe-7633716911797618689" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7631241163416079117" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7631241163416079117" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7642884462732773393" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642884462732773393" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="beaujenkins:7642881399624321025" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642881399624321025?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@gavin.wilder1" target="_blank" rel="noopener">@gavin.wilder1</a>
+          <span class="style">Truck Tok</span>
+          <span class="run">run by Jake Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:tiktok-sound" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZP9jb4FkM95gY-ugaLQ/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Barely Gettinby</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7645471573454161936" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Barely-GettinBy-7645471573454161936" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Bet On That</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7629196039954909200" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Bet-On-That-7629196039954909200" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Boots By The Wrong Bed</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Blake Whiten</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7650787579864680464" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Boots-By-The-Wrong-Bed-7650787579864680464?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7466103623584582446" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7466103623584582446" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">With Or Without Me</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7444095335000164368" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/With-or-Without-Me-7444095335000164368" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Contagious</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7605135910741821456" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7605135910741821456" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Contagious</span></div>
+          <div class="s-artist">Gannon Freemin</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7600573417545664513" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Contagious-7600573417545664513" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Warren Zeiders</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7637320848614099725" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7637320848614099725?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Highway Home</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7621701355119348510" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7621701355119348510?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">LMWYL (Audio HERE) - $500</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7589791757534038814" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7589791757534038814" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Hill I%27Ll Die On</span></div>
+          <div class="s-artist">Hill I&#x27;ll Die On (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7529820356963911696" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Hill-I%27ll-Die-On-7529820356963911696" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Painted You Pretty</span></div>
+          <div class="s-artist">Painted You Pretty (Audio HERE) - $250</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7529820538324289537" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Painted-You-Pretty-7529820538324289537" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Funny Seeing You Here</span></div>
+          <div class="s-artist">Funny Seeing You Here - extra</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7506646713580472336" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Funny-Seeing-You-Here-7506646713580472336" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Wannabe</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7633716911797618689" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Wannabe-7633716911797618689" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7631241163416079117" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7631241163416079117" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7642884462732773393" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642884462732773393" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Cheap Thrills</span></div>
+          <div class="s-artist">Gavin Adcock</div>
+          <div class="s-quota">
+            <span class="track" data-key="gavin.wilder1:7642881399624321025" data-quota="1"><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Cheap-Thrills-7642881399624321025?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@brew.pilled" target="_blank" rel="noopener">@brew.pilled</a>
+          <span class="style">Coffee Spinning</span>
+          <span class="run">run by Jake Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">The Swell</span></div>
+          <div class="s-artist">Amble</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7650706818272905217" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/The-Swell-7650706818272905217?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Growing A Garden</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Patrick Droney</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7651419481431984927" data-quota="5"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/growing-a-garden-7651419481431984927" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Growing A Garden</span></div>
+          <div class="s-artist">Patrick Droney</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7645138486508538654" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Growing-a-Garden-7645138486508538654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Manhattan</span></div>
+          <div class="s-artist">Patrick Droney</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7651109481778137886" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Manhattan-7651109481778137886" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Teddy Swims</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7649452268005100301" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7649452268005100301" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">The Time Of My Life June 26Th</span></div>
+          <div class="s-artist">Benson Boone</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7647699863698410254" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/The-Time-Of-My-Life-June-26th-7647699863698410254" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Elle Bramhall</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7645200613235510047" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7645200613235510047" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Sombr</div>
+          <div class="s-quota">
+            <span class="track" data-key="brew.pilled:7651545915102202654" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7651545915102202654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@drivetoclearmymind001" target="_blank" rel="noopener">@drivetoclearmymind001</a>
+          <span class="style">Night Core</span>
+          <span class="run">run by Jake Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Elle Bramhall</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7645200613235510047" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7645200613235510047" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Hanging Out To Dry</span></div>
+          <div class="s-artist">Florence Road</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7620738372440737793" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Hanging-Out-To-Dry-7620738372440737793" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Original Sound</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Florence Road</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7632551875144878870" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7632551875144878870" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Teddy Swims</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7649452268005100301" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7649452268005100301" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Out Of My Head</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Cara delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7631713667503638545" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Out-of-my-Head-7631713667503638545" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">I Forgot</span></div>
+          <div class="s-artist">Cara delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7631713625933137937" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/I-Forgot-7631713625933137937" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Seasons Change</span></div>
+          <div class="s-artist">The Bends</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7646711652156114961" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Seasons-Change-7646711652156114961?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Original Sound</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Sombr (Prio)</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7651545915102202654" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7651545915102202654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">DA TI</div>
+          <div class="s-quota">
+            <span class="track" data-key="drivetoclearmymind001:7619773910011153174" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7619773910011153174" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+    </div>
+    <div class="pgroup" data-poster="John Smathers">
+      <h2 class="poster">John Smathers <span class="pcount">2 pages</span></h2>
+      
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@dixie.james67" target="_blank" rel="noopener">@dixie.james67</a>
+          <span class="style">Country Silhouette</span>
+          <span class="run">run by John Smathers</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Warren Zeiders</div>
+          <div class="s-quota">
+            <span class="track" data-key="dixie.james67:7637320848614099725" data-quota="5"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7637320848614099725?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Highway Home</div>
+          <div class="s-quota">
+            <span class="track" data-key="dixie.james67:7621701355119348510" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7621701355119348510?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Seasons Change</span></div>
+          <div class="s-artist">The Bends</div>
+          <div class="s-quota">
+            <span class="track" data-key="dixie.james67:7646711652156114961" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Seasons-Change-7646711652156114961?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Adrien Nunez</div>
+          <div class="s-quota">
+            <span class="track" data-key="dixie.james67:tiktok-sound" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZT9jmyLRpLgwk-patnV/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Adrien Nunez</div>
+          <div class="s-quota">
+            <span class="track" data-key="dixie.james67:tiktok-sound" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZT9FooawPEcKV-ZgnCr/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@rhett.daniels97" target="_blank" rel="noopener">@rhett.daniels97</a>
+          <span class="style">Country Silhouette</span>
+          <span class="run">run by John Smathers</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Warren Zeiders</div>
+          <div class="s-quota">
+            <span class="track" data-key="rhett.daniels97:7637320848614099725" data-quota="5"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7637320848614099725?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Highway Home</div>
+          <div class="s-quota">
+            <span class="track" data-key="rhett.daniels97:7621701355119348510" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7621701355119348510?lang=en" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Seasons Change</span></div>
+          <div class="s-artist">The Bends</div>
+          <div class="s-quota">
+            <span class="track" data-key="rhett.daniels97:7646711652156114961" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Seasons-Change-7646711652156114961?" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Adrien Nunez</div>
+          <div class="s-quota">
+            <span class="track" data-key="rhett.daniels97:tiktok-sound" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZT9jmyLRpLgwk-patnV/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">Adrien Nunez</div>
+          <div class="s-quota">
+            <span class="track" data-key="rhett.daniels97:tiktok-sound" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZT9FooawPEcKV-ZgnCr/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+    </div>
+    <div class="pgroup" data-poster="Johnny Balik">
+      <h2 class="poster">Johnny Balik <span class="pcount">1 page</span></h2>
+      
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@holy.fumble" target="_blank" rel="noopener">@holy.fumble</a>
+          <span class="style">Saint Dairy</span>
+          <span class="run">run by Johnny Balik</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Danceteria</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7648096914659772433" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Danceteria-7648096914659772433" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Good For The Soul</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7648096914659739665" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Good-For-The-Soul-7648096914659739665" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">One Step Away</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7648096914659756049" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/One-Step-Away-7648096914659756049" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Read My Lips</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7648098368799967248" data-quota="5"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Read-My-Lips-7648098368799967248" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">The Time Of My Life June 26Th</span></div>
+          <div class="s-artist">Benson Boone</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7647699863698410254" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/The-Time-Of-My-Life-June-26th-7647699863698410254" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Out Of My Head</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Cara Delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7631713667503638545" data-quota="4"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Out-of-my-Head-7631713667503638545" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">I Forgot</span></div>
+          <div class="s-artist">Cara Delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7631713625933137937" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/I-Forgot-7631713625933137937" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Sombr</div>
+          <div class="s-quota">
+            <span class="track" data-key="holy.fumble:7651545915102202654" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7651545915102202654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+    </div>
+    <div class="pgroup" data-poster="Sam Hudgens">
+      <h2 class="poster">Sam Hudgens <span class="pcount">1 page</span></h2>
+      
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@tender.acres" target="_blank" rel="noopener">@tender.acres</a>
+          <span class="style">Summer Core</span>
+          <span class="run">run by Sam Hudgens</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Angel</span></div>
+          <div class="s-artist">Laila</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7633966356892731393" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Angel-7633966356892731393" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Danceteria</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7648096914659772433" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Danceteria-7648096914659772433" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Good For The Soul</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7648096914659739665" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Good-For-The-Soul-7648096914659739665" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">One Step Away</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7648096914659756049" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/One-Step-Away-7648096914659756049" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Read My Lips</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Madonna</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7648098368799967248" data-quota="6"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Read-My-Lips-7648098368799967248" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Burning Out</span></div>
+          <div class="s-artist">Linda Lindas</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7649166832390948865" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Burning-Out-7649166832390948865" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Sombr</div>
+          <div class="s-quota">
+            <span class="track" data-key="tender.acres:7651545915102202654" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7651545915102202654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+    </div>
+    <div class="pgroup" data-poster="Seeno Shahrooz">
+      <h2 class="poster">Seeno Shahrooz <span class="pcount">1 page</span></h2>
+      
+      <section class="acct">
+        <div class="acct-head">
+          <a class="handle" href="https://www.tiktok.com/@.velvet.hours" target="_blank" rel="noopener">@.velvet.hours</a>
+          <span class="style">Bedroom RnB</span>
+          <span class="run">run by Seeno Shahrooz</span>
+          <span class="total">🎯 21/wk</span>
+        </div>
+        <div class="sounds">
+        <div class="sound is-prio">
+          <div class="s-top"><span class="s-title">Out Of My Head</span><span class="prio">🔥</span></div>
+          <div class="s-artist">Cara Delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7631713667503638545" data-quota="6"><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Out-of-my-Head-7631713667503638545" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">I Forgot</span></div>
+          <div class="s-artist">Cara Delevigne</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7631713625933137937" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/I-Forgot-7631713625933137937" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">TikTok sound</span></div>
+          <div class="s-artist">The NBHD</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:tiktok-sound" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/t/ZT9jmDekLbctd-aMKut/" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Erl</span></div>
+          <div class="s-artist">BBYKobe</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7649251907694250001" data-quota="3"><input type='checkbox'><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/ERL-7649251907694250001?_d=secCgYIASAHKAESPgo8d%2BfYRG7Sp%2FhCEaha2cnSw9KkfZ7SHyFOh3fCrq91QrJSaGmSC11Z0aVfFFFXYU8Ix8VGXke3Xg1hLpKBGgA%3D&amp;_r=1&amp;_svg=3&amp;checksum=76ef4e0994a23a76ca15943f1bc3a4c8756102cb14e8b4edd28a59b5327b256e&amp;sec_user_id=MS4wLjABAAAAaPRLQRASnL60bfuNpcawlEFb_LvtSfmfHIztVbEBLlQcozTF9_uP1yRmJIlN32Js&amp;share_app_id=1233&amp;share_link_id=130F26BF-4238-45AB-96B5-609176A3751F&amp;share_music_id=7649251907694250001&amp;share_region=US&amp;sharer_language=en&amp;social_share_type=7&amp;source=h5_m&amp;timestamp=1781282474&amp;tt_from=copy&amp;u_code=d90h5fb5aal24c&amp;ug_btm=b6880%2Cb5171&amp;user_id=6750418794441655302&amp;utm_campaign=client_share&amp;utm_medium=ios&amp;utm_source=copy" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Nowhere Fast</span></div>
+          <div class="s-artist">Lucky Day</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7650254219132045313" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/Nowhere-Fast-7650254219132045313" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">Sombr</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7651545915102202654" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7651545915102202654" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div>
+        <div class="sound">
+          <div class="s-top"><span class="s-title">Original Sound</span></div>
+          <div class="s-artist">DA TI</div>
+          <div class="s-quota">
+            <span class="track" data-key=".velvet.hours:7619773910011153174" data-quota="2"><input type='checkbox'><input type='checkbox'><span class="count"></span></span>
+            <a class="open" href="https://www.tiktok.com/music/original-sound-7619773910011153174" target="_blank" rel="noopener">Open ▸</a>
+          </div>
+        </div></div>
+      </section>
+    </div></main>
+<footer>Auto-synced from the Rising Tides × Warner roster + tracker · last update 2026-06-18 22:05 EDT</footer>
+<script>
+  const wk = (() => { const d = new Date();
+    const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    t.setDate(t.getDate() - ((t.getDay() + 6) % 7) + 3);
+    const w1 = new Date(t.getFullYear(), 0, 4);
+    const week = 1 + Math.round(((t - w1) / 864e5 - 3 + ((w1.getDay() + 6) % 7)) / 7);
+    return t.getFullYear() + '-W' + String(week).padStart(2, '0'); })();
+  (() => { const d = new Date(); const m = new Date(d);
+    m.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    document.getElementById('weekof').textContent =
+      'Week of ' + m.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); })();
+
+  // ---- poster picker ----
+  const groups = [...document.querySelectorAll('.pgroup')];
+  const posters = groups.map(g => g.dataset.poster);
+  const chips = document.getElementById('chips');
+  const SEL = 'wsb:poster';
+  function render(sel) {
+    groups.forEach(g => g.style.display = (sel === '__all' || g.dataset.poster === sel) ? '' : 'none');
+    [...chips.children].forEach(c => c.classList.toggle('active', c.dataset.v === sel));
+    localStorage.setItem(SEL, sel);
+  }
+  function chip(label, v) { const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = label; b.dataset.v = v;
+    b.onclick = () => render(v); chips.appendChild(b); }
+  chip('All pages', '__all');
+  posters.forEach(p => chip(p, p));
+  const saved = localStorage.getItem(SEL);
+  render(saved && (saved === '__all' || posters.includes(saved)) ? saved : '__all');
+
+  // ---- per-sound tick tracker ----
+  document.querySelectorAll('.track').forEach(tr => {
+    const key = 'wsb:' + wk + ':' + tr.dataset.key;
+    const q = +tr.dataset.quota, sound = tr.closest('.sound');
+    const boxes = [...tr.querySelectorAll('input')], cnt = tr.querySelector('.count');
+    let n = +(localStorage.getItem(key) || 0);
+    const paint = () => { boxes.forEach((b, i) => b.checked = i < n);
+      cnt.textContent = n + '/' + q; sound.classList.toggle('done', n >= q); };
+    boxes.forEach(b => b.addEventListener('change', () => {
+      n = boxes.filter(x => x.checked).length; localStorage.setItem(key, n); paint(); }));
+    paint();
+  });
+</script>
+</body>
+</html>
